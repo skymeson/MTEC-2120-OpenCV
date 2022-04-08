@@ -216,6 +216,7 @@
             // convert Unity texture to OpenCv::Mat
             ImportTexture(texture, texParams);
 
+            
             // detect
             if (detect)
             {

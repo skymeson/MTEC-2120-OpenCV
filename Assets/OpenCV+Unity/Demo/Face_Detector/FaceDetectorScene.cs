@@ -23,8 +23,10 @@
 			base.forceFrontalCamera = true; // we work with frontal cams here, let's force it for macOS s MacBook doesn't state frontal cam correctly
 
 			//shapes = Resources.Load("shape_predictor_68_face_landmarks.dat") as TextAsset;
-			shapes = (TextAsset)Resources.Load("shape_predictor_68_face_landmarks.bytes", typeof(TextAsset));
+			shapes = (TextAsset)Resources.Load("shape_predictor_68_face_landmarks", typeof(TextAsset));
 
+			Debug.Log("Awake. 1");
+			// Why is shapes null???
 			if (shapes == null) return; 
 			byte[] shapeDat = shapes.bytes;
 
@@ -59,23 +61,89 @@
 			// performance data - some tricks to make it work faster
 			processor.Performance.Downscale = 256;          // processed image is pre-scaled down to N px by long side
 			processor.Performance.SkipRate = 0;             // we actually process only each Nth frame (and every frame for skipRate = 0)
+			if (processor == null) Debug.LogError("processor is null!");
+
+			Debug.Log("Awake. 2");
+
+			//processor.
+			Debug.Log("Processor is Initialized. " + processor.ToString());
+
 		}
+
+
+		protected override bool ProcessTexture(WebCamTexture input, ref Texture2D output)
+		{
+			//Mat img = Unity.TextureToMat(input, TextureParameters);
+
+			////Convert image to grayscale
+			//Mat imgGray = new Mat();
+			//Cv2.CvtColor(img, imgGray, ColorConversionCodes.BGR2GRAY);
+
+			//// Clean up image using Gaussian Blur
+			//Mat imgGrayBlur = new Mat();
+			//Cv2.GaussianBlur(imgGray, imgGrayBlur, new Size(5, 5), 0);
+
+			////Extract edges
+			//Mat cannyEdges = new Mat();
+			//Cv2.Canny(imgGrayBlur, cannyEdges, 10.0, 70.0);
+
+			////Do an invert binarize the image
+			//Mat mask = new Mat();
+			//Cv2.Threshold(cannyEdges, mask, 70.0, 255.0, ThresholdTypes.BinaryInv);
+
+			//// result, passing output texture as parameter allows to re-use it's buffer
+			//// should output texture be null a new texture will be created
+			//output = Unity.MatToTexture(mask, output);
+			//return true;
+
+
+			if (processor == null)
+			{
+				return false;
+			}
+            //	// detect everything we're interested in
+
+            if (input == null)
+			{
+				Debug.LogError("Input is null"); 
+				return false;
+			}
+
+			if (TextureParameters == null)
+			{
+				Debug.LogError("TextureParameters is null");
+				return false;
+			}
+
+			processor.ProcessTexture(input, TextureParameters);
+
+            // mark detected objects
+            processor.MarkDetected();
+
+            // processor.Image now holds data we'd like to visualize
+            output = Unity.MatToTexture(processor.Image, output);   // if output is valid texture it's buffer will be re-used, otherwise it will be re-created
+
+            return true;
+
+
+        }
+
 
 		/// <summary>
 		/// Per-frame video capture processor
 		/// </summary>
-		protected override bool ProcessTexture(WebCamTexture input, ref Texture2D output)
-		{
-			// detect everything we're interested in
-			processor.ProcessTexture(input, TextureParameters);
+		//protected override bool ProcessTexture(WebCamTexture input, ref Texture2D output)
+		//{
+		//	// detect everything we're interested in
+		//	processor.ProcessTexture(input, TextureParameters);
 
-			// mark detected objects
-			processor.MarkDetected();
+		//	// mark detected objects
+		//	processor.MarkDetected();
 
-			// processor.Image now holds data we'd like to visualize
-			output = Unity.MatToTexture(processor.Image, output);   // if output is valid texture it's buffer will be re-used, otherwise it will be re-created
+		//	// processor.Image now holds data we'd like to visualize
+		//	output = Unity.MatToTexture(processor.Image, output);   // if output is valid texture it's buffer will be re-used, otherwise it will be re-created
 
-			return true;
-		}
+		//	return true;
+		//}
 	}
 }

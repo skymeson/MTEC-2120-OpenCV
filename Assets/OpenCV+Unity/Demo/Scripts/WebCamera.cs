@@ -144,6 +144,7 @@ namespace OpenCvSharp.Demo
 				ReadTextureConversionParameters();
 
 				// process texture with whatever method sub-class might have in mind
+				// FIXME - this is returning null reference. 
 				if (ProcessTexture(webCamTexture, ref renderedTexture))
 				{
 					RenderFrame();
