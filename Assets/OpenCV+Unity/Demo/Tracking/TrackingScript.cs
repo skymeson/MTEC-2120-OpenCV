@@ -20,9 +20,11 @@
 		, IDragHandler
 		, IEndDragHandler
 	{
-		// downscaling const
-		const float downScale = 0.33f;
-		const float minimumAreaDiagonal = 25.0f;
+        // downscaling const
+        //const float downScale = 0.33f;
+        const float downScale = 1f;
+
+        const float minimumAreaDiagonal = 25.0f;
 
 		// dragging
 		bool isDragging = false;
