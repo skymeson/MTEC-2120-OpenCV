@@ -49,7 +49,7 @@
 
 		public Vector2 GetImageCoord()
         {
-			//Debug.Log("Getting Image Coord : " + trackedPosition.x + " " + trackedPosition.y); 
+			Debug.Log("Getting Image Coord : " + trackedPosition.x + " " + trackedPosition.y); 
 			return trackedPosition; 
 
 		}
@@ -79,6 +79,7 @@
 			// downscaling
 			output.x *= downScale;
 			output.y *= downScale;
+			Debug.Log("ConvertToImageSpace : " + output.x + " " + output.y);
 
 			return output;
 		}
