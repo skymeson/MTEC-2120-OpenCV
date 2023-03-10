@@ -19,8 +19,8 @@ namespace OpenCvSharp.Demo
 		/// </summary>
 		public GameObject Surface;
 
-		private Nullable<WebCamDevice> webCamDevice = null;
-		private WebCamTexture webCamTexture = null;
+        protected Nullable<WebCamDevice> webCamDevice = null;
+		protected WebCamTexture webCamTexture = null;
 		private Texture2D renderedTexture = null;
 
 		/// <summary>
@@ -36,48 +36,50 @@ namespace OpenCvSharp.Demo
 		/// <summary>
 		/// Camera device name, full list can be taken from WebCamTextures.devices enumerator
 		/// </summary>
-		public string DeviceName
-		{
-			get
-			{
-				return (webCamDevice != null) ? webCamDevice.Value.name : null;
-			}
-			set
-			{
-				// quick test
-				if (value == DeviceName)
-					return;
+		//public string DeviceName
+		//{
+		//	get
+		//	{
+		//		return (webCamDevice != null) ? webCamDevice.Value.name : null;
+		//	}
+		//	set
+		//	{
+		//		// quick test
+		//		if (value == DeviceName)
+		//			return;
 
-				if (null != webCamTexture && webCamTexture.isPlaying)
-					webCamTexture.Stop();
+		//		if (null != webCamTexture && webCamTexture.isPlaying)
+		//			webCamTexture.Stop();
 
-				// get device index
-				int cameraIndex = -1;
-				for (int i = 0; i < WebCamTexture.devices.Length && -1 == cameraIndex; i++)
-				{
-					if (WebCamTexture.devices[i].name == value)
-						cameraIndex = i;
-				}
+		//		// get device index
+		//		//int cameraIndex = -1;
+		//		//for (int i = 0; i < WebCamTexture.devices.Length && -1 == cameraIndex; i++)
+		//		//{
+		//		//	if (WebCamTexture.devices[i].name == value)
+		//		//		cameraIndex = i;
+		//		//}
+				
+		//		int cameraIndex = 0; 
 
-				// set device up
-				if (-1 != cameraIndex)
-				{
-					webCamDevice = WebCamTexture.devices[cameraIndex];
-					//webCamTexture = new WebCamTexture(webCamDevice.Value.name);
-					webCamTexture = new WebCamTexture();
+		//		// set device up
+		//		if (-1 != cameraIndex)
+		//		{
+		//			webCamDevice = WebCamTexture.devices[cameraIndex];
+		//			//webCamTexture = new WebCamTexture(webCamDevice.Value.name);
+		//			webCamTexture = new WebCamTexture();
 
 
-					// read device params and make conversion map
-					ReadTextureConversionParameters();
+		//			// read device params and make conversion map
+		//			ReadTextureConversionParameters();
 
-					webCamTexture.Play();
-				}
-				else
-				{
-					throw new ArgumentException(String.Format("{0}: provided DeviceName is not correct device identifier", this.GetType().Name));
-				}
-			}
-		}
+		//			webCamTexture.Play();
+		//		}
+		//		else
+		//		{
+		//			throw new ArgumentException(String.Format("{0}: provided DeviceName is not correct device identifier", this.GetType().Name));
+		//		}
+		//	}
+		//}
 
 		/// <summary>
 		/// This method scans source device params (flip, rotation, front-camera status etc.) and
@@ -112,12 +114,22 @@ namespace OpenCvSharp.Demo
 		/// </summary>
 		protected virtual void Awake()
 		{
-			if (WebCamTexture.devices.Length > 0)
-				DeviceName = WebCamTexture.devices[WebCamTexture.devices.Length - 1].name;
-		}
+            //if (WebCamTexture.devices.Length > 0)
+            //{
+            //             //DeviceName = WebCamTexture.devices[WebCamTexture.devices.Length - 1].name;
+            //             DeviceName = WebCamTexture.devices[0].name;
+            //         }
 
-		void OnDestroy() 
+
+            webCamTexture = new WebCamTexture();
+            webCamTexture.Play();
+
+        }
+
+		void OnDisable() 
 		{
+
+			Debug.Log("OnDisable ... stopping webcam.");
 			if (webCamTexture != null)
 			{
 				if (webCamTexture.isPlaying)

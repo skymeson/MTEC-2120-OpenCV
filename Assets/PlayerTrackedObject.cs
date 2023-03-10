@@ -86,6 +86,9 @@ public class PlayerTrackedObject : MonoBehaviour
 
 	void BackToMain()
 	{
-		SceneManager.LoadScene("MainMenu");
+
+        trackedObj.Disable();
+
+        SceneManager.LoadScene("MainMenu");
 	}
 }

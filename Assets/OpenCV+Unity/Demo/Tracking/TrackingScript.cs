@@ -167,11 +167,35 @@
 			}
 		}
 
-		/// <summary>
-		/// Dragging handlers, drops current tracker (as we'll get new area of interest)
-		/// </summary>
-		/// <param name="eventData"></param>
-		public void OnBeginDrag(PointerEventData eventData)
+
+		public void Disable()
+		{
+            if (webCamTexture != null)
+            {
+                if (webCamTexture.isPlaying)
+                {
+                    webCamTexture.Stop();
+                }
+                webCamTexture = null;
+            }
+
+            if (webCamDevice != null)
+            {
+                webCamDevice = null;
+            }
+        }
+
+        void OnDisable()
+        {
+			Disable();
+        }
+
+
+        /// <summary>
+        /// Dragging handlers, drops current tracker (as we'll get new area of interest)
+        /// </summary>
+        /// <param name="eventData"></param>
+        public void OnBeginDrag(PointerEventData eventData)
 		{
 			DropTracking();
 
